@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — MUSU STUDIO</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@400;700;900&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #1E7FBE;
+    --gold-light: #3BA5E8;
+    --gold-dim: #0F4A7A;
+    --black: #050508;
+    --dark: #0a0a10;
+    --dark2: #10101a;
+    --dark3: #18182a;
+    --white: #e8eef5;
+    --gray: #888;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+    opacity: 0.6;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9997;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 60px;
+    background: linear-gradient(to bottom, rgba(5,5,5,0.95) 0%, transparent 100%);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--white); }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width 0.35s ease;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 60px;
+    overflow: hidden;
+    margin-top: 60px;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 50%, rgba(30,127,190,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(30,127,190,0.05) 0%, transparent 60%),
+      linear-gradient(135deg, #050508 0%, #080d14 50%, #050508 100%);
+  }
+  .hero-lines {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .hero-lines::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    width: 1px; height: 100%;
+    background: linear-gradient(to bottom, transparent, rgba(30,127,190,0.15), transparent);
+  }
+  .hero-lines::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    width: 100%; height: 1px;
+    background: linear-gradient(to right, transparent, rgba(30,127,190,0.08), transparent);
+  }
+  .hero-tag {
+    font-size: 0.68rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    animation: fadeUp 1s ease 0.3s both;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 40px; height: 1px;
+    background: var(--gold);
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    line-height: 0.92;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    animation: fadeUp 1s ease 0.5s both;
+  }
+  .hero-title .gold { color: var(--gold); }
+  .hero-subtitle {
+    margin-top: 28px;
+    font-size: 0.8rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gray);
+    font-weight: 300;
+    animation: fadeUp 1s ease 0.7s both;
+  }
+
+  /* ── SECTION COMMON ── */
+  section { padding: 120px 60px; }
+
+  .section-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-tag::before {
+    content: '';
+    display: block;
+    width: 30px; height: 1px;
+    background: var(--gold);
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    letter-spacing: 0.06em;
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+  .section-divider {
+    width: 60px; height: 1px;
+    background: var(--gold);
+    margin-bottom: 60px;
+  }
+
+  /* ── PORTFOLIO GRID ── */
+  .portfolio-section { background: var(--dark); }
+
+  .portfolio-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* For 16:9 items, let them stretch wider */
+  .portfolio-item.wide {
+    max-width: 100%;
+  }
+
+  .portfolio-item {
+    display: flex;
+    flex-direction: column;
+    animation: fadeUp 1s ease both;
+  }
+
+  .portfolio-item:nth-child(1) { animation-delay: 0.2s; }
+  .portfolio-item:nth-child(2) { animation-delay: 0.4s; }
+  .portfolio-item:nth-child(3) { animation-delay: 0.6s; }
+  .portfolio-item:nth-child(4) { animation-delay: 0.8s; }
+
+  .portfolio-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .portfolio-label::before {
+    content: '';
+    width: 20px; height: 1px;
+    background: var(--gold);
+  }
+
+  /* ══════════════════════════════════════════════
+     VIDEO PLAYER CONTAINERS — ADD NEW RATIOS HERE
+     
+     HOW TO ADD A NEW PLAYER:
+     1. Copy one of the .player-* blocks below
+     2. Change the class name  →  e.g. .player-4-3
+     3. Change aspect-ratio    →  e.g. aspect-ratio: 4/3
+     4. Change max-width       →  adjust as needed
+     5. Use that class in HTML →  <div class="video-player-container player-4-3">
+     ══════════════════════════════════════════════ */
+
+  /* BASE — shared by ALL ratio variants */
+  .video-player-container {
+    position: relative;
+    background: #000;
+    overflow: hidden;
+    border: 1px solid rgba(30,127,190,0.15);
+    margin: 0 auto 16px;
+  }
+  .video-player-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(30,127,190,0.05);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* RATIO: 9:16  (Vertical / Reels / Shorts / TikTok) */
+  .player-9-16 {
+    width: 100%;
+    max-width: 340px;
+    aspect-ratio: 9 / 16;
+  }
+
+  /* RATIO: 16:9  (Landscape / YouTube / Cinema) */
+  .player-16-9 {
+    width: 100%;
+    max-width: 640px;
+    aspect-ratio: 16 / 9;
+  }
+
+  /* RATIO: 1:1  (Square / Instagram Feed) */
+  .player-1-1 {
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 1 / 1;
+  }
+
+  /* ── Add more ratios below, e.g.:
+     .player-4-3  { width:100%; max-width:560px; aspect-ratio: 4/3; }
+     .player-21-9 { width:100%; max-width:760px; aspect-ratio: 21/9; }
+  ── */
+
+  /* Corner accents */
+  .corner {
+    position: absolute;
+    width: 24px; height: 24px;
+    z-index: 3;
+  }
+  .corner-tl { top: 0; left: 0; border-top: 2px solid var(--gold); border-left: 2px solid var(--gold); }
+  .corner-tr { top: 0; right: 0; border-top: 2px solid var(--gold); border-right: 2px solid var(--gold); }
+  .corner-bl { bottom: 0; left: 0; border-bottom: 2px solid var(--gold); border-left: 2px solid var(--gold); }
+  .corner-br { bottom: 0; right: 0; border-bottom: 2px solid var(--gold); border-right: 2px solid var(--gold); }
+
+  /* Video embed area */
+  .video-embed {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    background: radial-gradient(ellipse at center, #080d1a 0%, #050508 70%);
+  }
+  /* Video / iframe placed directly inside .video-player-container */
+  .video-player-container > video,
+  .video-player-container > iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    object-fit: contain;   /* contain = full frame visible; switch to cover to crop-fill */
+    background: #000;
+    z-index: 1;
+  }
+
+  .video-embed iframe,
+  .video-embed video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    object-fit: contain;
+  }
+  .video-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    opacity: 0.7;
+  }
+  .play-icon-big {
+    width: 80px; height: 80px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: none;
+    transition: transform 0.3s, background 0.3s;
+  }
+  .play-icon-big:hover { background: rgba(30,127,190,0.15); transform: scale(1.08); }
+  .play-icon-big svg { margin-left: 5px; }
+  .video-placeholder p {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  /* Video controls bar */
+  .video-controls {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+    padding: 30px 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 4;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .video-player-container:hover .video-controls { opacity: 1; }
+  .progress-bar-track {
+    width: 100%;
+    height: 2px;
+    background: rgba(255,255,255,0.2);
+    cursor: none;
+    position: relative;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--gold);
+    width: 35%;
+    pointer-events: none;
+  }
+  .progress-bar-track::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 35%;
+    transform: translateY(-50%);
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    margin-left: -5px;
+  }
+  .controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .controls-left, .controls-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .ctrl-btn {
+    background: none;
+    border: none;
+    color: var(--white);
+    cursor: none;
+    padding: 4px;
+    opacity: 0.8;
+    transition: opacity 0.2s, color 0.2s;
+    display: flex;
+  }
+  .ctrl-btn:hover { opacity: 1; color: var(--gold); }
+  .time-display {
+    font-size: 0.68rem;
+    color: var(--gray);
+    letter-spacing: 0.05em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Portfolio item info */
+  .portfolio-info {
+    display: flex;
+    flex-direction: column;
+  }
+  .portfolio-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.1em;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .portfolio-desc {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+  /* ── CONTACT ── */
+  .contact-section {
+    background: var(--black);
+    text-align: center;
+    padding: 140px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-section::before {
+    content: 'LET\'S CREATE';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18vw;
+    color: rgba(30,127,190,0.025);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    letter-spacing: 0.1em;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .contact-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 7vw, 6rem);
+    letter-spacing: 0.06em;
+    line-height: 1;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
+  }
+  .contact-sub {
+    font-size: 0.82rem;
+    color: var(--gray);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 56px;
+    font-weight: 300;
+    position: relative;
+    z-index: 1;
+  }
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+  .contact-link {
+    padding: 16px 44px;
+    border: 1px solid rgba(30,127,190,0.3);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.7rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-weight: 500;
+    cursor: none;
+    transition: border-color 0.3s, color 0.3s, background 0.3s, transform 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .contact-link:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(30,127,190,0.05);
+    transform: translateY(-3px);
+  }
+  .contact-link svg { flex-shrink: 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dark);
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(30,127,190,0.08);
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+  }
+  .footer-copy {
+    font-size: 0.62rem;
+    color: var(--gray);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .footer-socials {
+    display: flex;
+    gap: 20px;
+  }
+  .footer-social {
+    width: 34px; height: 34px;
+    border: 1px solid rgba(30,127,190,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray);
+    text-decoration: none;
+    cursor: none;
+    transition: border-color 0.3s, color 0.3s;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+  .footer-social:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Cinematic scan line */
+  .scanline {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, rgba(30,127,190,0.3), transparent);
+    animation: scan 8s linear infinite;
+    pointer-events: none;
+    z-index: 9995;
+  }
+  @keyframes scan {
+    0% { top: 0; opacity: 0; }
+    5% { opacity: 1; }
+    95% { opacity: 0.2; }
+    100% { top: 100vh; opacity: 0; }
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    nav { padding: 18px 24px; }
+    .nav-links { display: none; }
+    section { padding: 80px 24px; }
+    .hero { padding: 0 24px; }
+    footer { flex-direction: column; gap: 20px; text-align: center; padding: 30px 24px; }
+    .contact-section { padding: 80px 24px; }
+    .contact-links { flex-direction: column; align-items: center; }
+    .portfolio-grid { gap: 48px; }
+    .player-9-16  { max-width: 260px; }
+    .player-16-9  { max-width: 100%; }
+    .player-1-1   { max-width: 320px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Scanline effect -->
+<div class="scanline"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html"><span>MUSU</span> STUDIO</a>
+  <ul class="nav-links">
+    <li><a href="index.html#work">Work</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#services">Services</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero" id="portfolio">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-tag">Portfolio Showcase</div>
+  <h1 class="hero-title">FULL<br><span class="gold">PORTFOLIO</span></h1>
+  <p class="hero-subtitle">All Projects in One Place</p>
+</section>
+
+<!-- PORTFOLIO SECTION -->
+<section class="portfolio-section">
+  <div class="section-tag reveal">Complete Works</div>
+  <h2 class="section-title reveal">MY<br>WORKS</h2>
+  <div class="section-divider reveal"></div>
+
+  <div class="portfolio-grid reveal">
+
+    <!-- ══════════════════════════════════════════════
+         PORTFOLIO ITEM — 9:16 (Vertical / Reels / Shorts / TikTok)
+         To add another 9:16 item: copy this block, change label/title/desc/src
+    ══════════════════════════════════════════════ -->
+    <div class="portfolio-item">
+      <div class="portfolio-label">Edit 1 · 9:16</div>
+      <div class="video-player-container player-9-16">
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+        <video src="https://r2.fivemanage.com/kuMnTOqVNyIBnzhp4r8gG/musumotivationportfolio.mp4" controls playsinline></video>
+      </div>
+      <div class="portfolio-info">
+        <div class="portfolio-title">Motivation Edit >></div>
+        <div class="portfolio-desc">Text • Color Grade • Motivation</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         PORTFOLIO ITEM — 16:9 (Landscape / YouTube / Cinema)
+         To add another 16:9 item: copy this block, change label/title/desc/src
+    ══════════════════════════════════════════════ -->
+    <div class="portfolio-item wide">
+      <div class="portfolio-label">Edit 2 · 16:9</div>
+      <div class="video-player-container player-16-9">
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+        <video src="https://r2.fivemanage.com/IovDyfYx3bXgUDf6BcbEZ/MUSUPORTFOLIO6.mp4" controls playsinline></video>
+      </div>
+      <div class="portfolio-info">
+        <div class="portfolio-title">Text Effects >></div>
+        <div class="portfolio-desc">Sfx • Text • Transition</div>
+      </div>
+    </div>
+
+    <div class="portfolio-item">
+      <div class="portfolio-label">Edit 3 · 1:1</div>
+      <div class="video-player-container player-1-1">
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+        <video src="https://r2.fivemanage.com/IovDyfYx3bXgUDf6BcbEZ/Blinkitanimationbymusu.mp4" controls playsinline></video>
+      </div>
+      <div class="portfolio-info">
+        <div class="portfolio-title">Motion Graphics >></div>
+        <div class="portfolio-desc">Sfx • Smooth • Map Transitions</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         ADD MORE ITEMS BELOW
+         Paste any of the blocks above and change:
+           - portfolio-label  (e.g. "Edit 4 · 4:3")
+           - player-*  class  (e.g. player-4-3)
+           - video src
+           - portfolio-title + portfolio-desc
+    ══════════════════════════════════════════════ -->
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="section-tag reveal" style="justify-content:center;">Ready to Collaborate</div>
+  <h2 class="contact-title reveal">INTERESTED?<br><span style="color:var(--gold);">LET'S TALK</span></h2>
+  <p class="contact-sub reveal">Reach out for your next project</p>
+  <div class="contact-links reveal">
+    <a href="mailto:mmusuefx@gmail.com" class="contact-link">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Email Me
+    </a>
+    <a href="https://www.instagram.com/musuefx?igsh=MTZwaHdiM2swYjI3" class="contact-link">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      Instagram
+    </a>
+    <a href="https://youtube.com/@musu_efx?si=UdZ1TyqsI4a-cDTM" class="contact-link">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+      YouTube
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">MUSU STUDIO</div>
+  <div class="footer-copy">© 2026 MUSU STUDIO — All Rights Reserved</div>
+  <div class="footer-socials">
+    <a class="footer-social" href="https://www.instagram.com/musuefx?igsh=MTZwaHdiM2swYjI3">IG</a>
+    <a class="footer-social" href="https://youtube.com/@musu_efx?si=UdZ1TyqsI4a-cDTM">YT</a>
+    <a class="footer-social" href="#">🌐</a>
+  </div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animateCursor() {
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  // Hover expand cursor on interactive elements
+  document.querySelectorAll('a, button, .portfolio-item').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '16px'; cursor.style.height = '16px';
+      ring.style.width = '52px'; ring.style.height = '52px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '10px'; cursor.style.height = '10px';
+      ring.style.width = '36px'; ring.style.height = '36px';
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Hide placeholder when video src is present
+  document.querySelectorAll('.video-player-container').forEach(container => {
+    const video = container.querySelector('video');
+    const placeholder = container.querySelector('.video-placeholder');
+    if (video && placeholder && video.src && video.src !== window.location.href) {
+      placeholder.style.display = 'none';
+    }
+  });
+</script>
+</body>
+</html>
